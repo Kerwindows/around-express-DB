@@ -1,0 +1,159 @@
+
+.header {
+  -webkit-box-sizing: border-box;
+	box-sizing: border-box;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  justify-content: space-between;
+	min-width: 320px;
+  max-width: 880px;
+  width: 100%;
+  margin: 0 auto;
+	padding-top:45px;
+	padding-left: 24px;
+	padding-right:24px;
+	background: #000000;
+	color: #fff;
+	font-family: 'Inter', Arial, sans-serif;
+	line-height: 1;    
+  border-bottom: 1px solid rgb(84 84 84 / 70%);
+  -webkit-transition: 0.3s;
+  -o-transition: 0.3s;
+  transition: 0.3s;
+}
+
+.header__container {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  padding-bottom: 40px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.header__logo {
+  width: 173px;
+  height: auto;
+  padding-bottom: 0;
+}
+
+.header__components {
+  display: flex;
+  padding: 6px 0 0 0;
+}
+
+.header__email {
+  margin: 0;
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 22px;
+  color: #fff;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.header__menu-button {
+  display: none;
+  width: 24px;
+  cursor: pointer;
+}
+.header__menu-button:hover {
+  opacity: 0.6;
+}
+
+
+.header__menu {
+  display: flex;
+  overflow: hidden;
+  margin-left: 20px;
+}
+
+.header__button {
+  grid-area: button;
+  height: 22px;
+  padding: 0 0 0 22px;
+  background: transparent;
+  border: none;
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 18px;
+  text-align: center;
+  line-height: 22px;
+  color: #a9a9a9;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.header_menu-button-hide {
+  display: none;
+}
+
+@media screen and (max-width: 792px) {
+  .header__logo {
+    width: 173px;
+  }
+}
+
+@media screen and (max-width: 540px) {
+  .header {
+    flex-direction: column-reverse;
+    align-items: center;
+    padding-top:0;
+		padding-left: 0;
+		padding-right: 0;
+  }
+
+  .header__container {
+    width: 100%;
+    padding: 28px 30px 32px 30px;
+  }
+
+  .header__logo {
+    width: 126px;
+    padding-bottom: 0;
+    margin-right: auto;
+  }
+
+  .header__menu-button {
+    display: inline-block;
+  }
+
+  .header__menu {
+    height: 0;
+    width: 100%;
+    visibility: hidden;
+    opacity: 0;
+    transition: 0.3s ease-out;
+    
+    flex-direction: column;
+    padding: 0;
+    margin-left: 0;
+    border-bottom: 1px solid rgb(84 84 84 / 70%);
+    z-index: -1;
+  }
+  .header_menu-open {
+    height: auto;
+    padding: 40px 0;
+    display: flex;
+    visibility: visible;
+    opacity: 1;
+    z-index: 0;
+  }
+  .header__email {
+    text-align: center;
+    padding-bottom: 18px;
+  }
+
+  .header__button {
+    padding: 0;
+  }
+
+  .hide {
+    display: none;
+  }
+
+}

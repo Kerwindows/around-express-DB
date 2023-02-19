@@ -1,0 +1,248 @@
+.profile {
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	max-width: 880px;
+	width: 100%;
+	margin: 0 auto;
+	-webkit-transition: 0.3s;
+	-o-transition: 0.3s;
+	transition: 0.3s;
+
+}
+
+.profile__edit-column {
+	max-width: 415px;
+	width: 100%;
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-orient: vertical;
+	-webkit-box-direction: normal;
+	-ms-flex-direction: column;
+	flex-direction: column;
+	gap: 16px;
+	margin: auto 0 auto 30px;
+}
+
+.profile__edit {
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	width: 100%;
+
+}
+
+.profile__edit-name {
+	margin: 0;
+	text-align: left;
+	font-size: 42px;
+	font-weight: 500;
+	line-height: 1.14;
+	-o-text-overflow: ellipsis;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+}
+
+.profile__about-me {
+	margin: 0;
+	text-align: left;
+	font-size: 18px;
+	font-weight: 400;
+	line-height: 1;
+	-o-text-overflow: ellipsis;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+}
+
+.profile__image {
+	width: 100%;
+	height: auto;
+	border-radius: 50%;
+	object-fit: cover;
+
+}
+
+.profile__edit-image-btn {
+	width: 36px;
+	height: 36px;
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-pack: center;
+	-ms-flex-pack: center;
+	justify-content: center;
+	margin-top: 15px;
+	margin-left: 18px;
+	border: 1px solid #fff;
+	background-color: transparent;
+	-webkit-transition: 0.3s;
+	-o-transition: 0.3s;
+	transition: 0.3s;
+}
+
+.profile__edit-btn {
+	width: 24px;
+	height: 24px;
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-pack: center;
+	-ms-flex-pack: center;
+	justify-content: center;
+	margin-top: 15px;
+	margin-left: 18px;
+	border: 1px solid #fff;
+	background-color: transparent;
+	-webkit-transition: 0.3s;
+	-o-transition: 0.3s;
+	transition: 0.3s;
+}
+
+.profile__edit-btn:hover {
+	opacity: 0.6;
+	cursor: pointer;
+
+}
+
+.profile__edit-imnage-icon {
+	width: 10px;
+	height: 10px;
+	margin: auto;
+}
+
+.profile__edit-icon {
+	width: 10px;
+	height: 10px;
+	margin: auto;
+}
+
+.profile__add-places-btn {
+	max-width: 150px;
+	width: 100%;
+	height: 50px;
+	margin: auto 0 auto auto;
+	background-color: #000;
+	border: 2px solid #fff;
+	-webkit-transition: 0.3s;
+	-o-transition: 0.3s;
+	transition: 0.3s;
+	border-radius: 2px;
+}
+
+.profile__add-places-btn:hover {
+	opacity: 0.6;
+	cursor: pointer;
+}
+
+.profile__image-container {
+	position: relative;
+	display: flex;
+	width: 120px;
+	height: 120px;
+}
+
+.profile__image-edit-btn {
+	margin: auto;
+	background: none;
+	border: none;
+	width: 36px;
+	height: 36px;
+	cursor: pointer;
+}
+
+.profile__image-edit {
+	position: absolute;
+	top: 0;
+	display: flex;
+	background: rgb(0 0 0 / 80%);
+	width: 100%;
+	height: 100%;
+	transition: 0.3s;
+	opacity: 0;
+}
+
+.profile__image-edit:hover {
+	opacity: 1;
+}
+
+
+.profile__image-edit-icon {
+	width: 100%;
+}
+
+@media screen and (max-width: 792px) {
+	.profile {
+		-webkit-box-orient: vertical;
+		-webkit-box-direction: normal;
+		-ms-flex-direction: column;
+		flex-direction: column;
+	}
+
+	.profile__edit {
+		-webkit-box-pack: center;
+		-ms-flex-pack: center;
+		justify-content: center;
+	}
+
+	.profile__edit-column {
+		margin: 0 auto;
+	}
+
+	.profile__image {
+		max-width: 120px;
+		height: auto;
+	}
+
+	.profile__add-places-btn {
+		margin: 36px auto 0;
+		min-width: 282px;
+	}
+
+	.profile__about-me {
+		text-align: center;
+	}
+
+	.profile__image-container {
+		margin: 0 auto 26px;
+	}
+}
+
+@media screen and (max-width: 540px) {
+
+	.profile__edit-column {
+		margin: 0 auto;
+	}
+
+	.profile__edit {
+		margin: 0 auto;
+	}
+
+	.profile__edit-name {
+		font-size: 22px;
+		line-height: 27px;
+	}
+
+	.profile__about-me {
+		font-size: 14px;
+		line-height: 17px;
+		text-align: center;
+	}
+
+	.profile__edit-btn {
+		width: 18px;
+		height: 18px;
+		margin-left: 10px;
+		margin-top: 4px;
+	}
+
+	.profile__edit-icon {
+		width: 7.5px;
+		height: 7.5px;
+
+	}
+}

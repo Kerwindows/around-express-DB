@@ -1,0 +1,21 @@
+.footer {
+	max-width: 880px;
+	margin:0 auto;
+	-webkit-transition: 0.3s;
+	-o-transition: 0.3s;
+	transition: 0.3s;
+}
+.footer__copyright {
+	margin:0;
+	color: #545454;
+	font-size: 14px;
+	line-height:22px;
+	padding: 0 0 60px 0;
+}
+
+@media screen and (max-width:540px) {
+	.footer__copyright {
+		padding: 0 0 36px 0;
+	line-height:17px;
+	}
+}

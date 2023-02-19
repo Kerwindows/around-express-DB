@@ -1,0 +1,109 @@
+.card {
+	width: 282px;
+	height: 361px;
+	border-radius: 10px;
+	background-color: #fff;
+	overflow: hidden;
+	position: relative;
+}
+
+.card__image {
+	display: block;
+	-o-object-fit: cover;
+	object-fit: cover;
+	width: 100%;
+	height: 282px;
+	cursor: pointer;
+
+}
+
+.card__place-title {
+	margin: 20px 15px 17px 21px;
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-pack: justify;
+	-ms-flex-pack: justify;
+	justify-content: space-between;
+	-webkit-box-align: center;
+	-ms-flex-align: center;
+	align-items: center;
+}
+
+.card__place-name {
+	margin: 0;
+	-o-text-overflow: ellipsis;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+	color: #000;
+	font-size: 24px;
+	font-weight: 900;
+	line-height: 1.2;
+	text-align: left;
+}
+
+.card__place-favorite {
+	background-image: url(../images/heart.svg);
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-color: white;
+	min-width: 21px;
+	height: 19px;
+	-webkit-transition: 0.2s;
+	-o-transition: 0.2s;
+	transition: 0.2s;
+	color: transparent;
+	border: none;
+}
+
+.card__place-favorite:hover {
+	opacity: 0.5;
+	cursor: pointer;
+}
+
+.card__place-favorite_active {
+	background-image: url(../images/heart-fill.svg);
+}
+
+.card__trash {
+	position: absolute;
+	top: 18px;
+	right: 15px;
+	opacity: 0;
+	background: none;
+	border: none;
+	transition: 0.3s;
+}
+.card__trash_visible {
+	visibility: visible;
+  }
+  
+.card__trash_hidden {
+	visibility: hidden;
+  }
+
+.card__trash:hover {
+	cursor: pointer;
+}
+
+.card:hover .card__trash {
+	opacity: 1;
+}
+
+.card__place-num {
+	width: 22px;
+	height: 22px;
+	margin: 0;
+	font-size: 13px;
+    line-height: 1.7;
+    text-align: center;
+    border-radius: 50px;
+    color: #000;
+}
+
+@media screen and (max-width:778px) {
+	.card__trash {
+		opacity: 1;
+	}
+}
