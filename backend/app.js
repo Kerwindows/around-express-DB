@@ -2,20 +2,24 @@ const express = require("express");
 const mongoose = require("mongoose");
 const helmet = require("helmet");
 const cors = require("cors");
-
+const { login, createUser } = require('./controllers/users');
 const { celebrate, Joi, errors } = require("celebrate");
 const {
   HTTP_CLIENT_ERROR_NOT_FOUND,
   SERVERSIDE_ERROR,
 } = require("./utils/utils");
-const { requestLogger, errorLogger } = require("./middlewares/logger");
+const { requestLogger, errorLogger } = require("./middleware/logger");
 
 const app = express();
-
 app.use(helmet());
-app.use(cors());
-app.options('*', cors());
+// app.use(cors());
+// app.options('*', cors());
 
+const allowedOrigins = [
+  "http://localhost:3001"
+]
+
+app.use(cors({ origin: allowedOrigins }));
 require('dotenv').config();
 
 mongoose.connect("mongodb://localhost:27017/aroundb");
@@ -43,8 +47,6 @@ app.post('/signup', celebrate({
 
 app.post('/signin', login);
 
-// app.use(auth);
-
 app.use(requestLogger);
 app.use("/users", usersRouter);
 app.use("/cards", cardRouter);
@@ -57,14 +59,17 @@ app.use((req, res) => {
 
 app.use(errorLogger);
 app.use(errors());
+  
 
 app.use((err, req, res, next) => {
+  console.error(err);
   // if an error has no status, display 500
   const { SERVERSIDE_ERROR, message } = err;
   res.status(SERVERSIDE_ERROR).send({
     // check the status and display a message based on it
     message: SERVERSIDE_ERROR ? "An error occurred on the server" : message,
   });
+  
 });
 
 const { PORT = 3000 } = process.env;

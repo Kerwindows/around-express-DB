@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+console.log(jwt)
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 

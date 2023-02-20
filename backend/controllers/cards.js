@@ -1,99 +1,59 @@
+const { BadRequest } = require('../middleware/errors/bad-request');
+const { NotFoundError } = require('../middleware/errors/not-found');
 const Card = require('../models/card');
-const {
-  HTTP_CLIENT_ERROR_NOT_FOUND,
-  HTTP_CLIENT_BAD_REQUEST,
-  SERVERSIDE_ERROR,
-} = require('../utils/utils');
 
-const getCards = (req, res) => {
+const getCards = (req, res, next) => {
   Card.find({})
     .orFail() // throws a DocumentNotFoundError
     .then((cardData) => {
       res.send(cardData); // skipped, because an error was thrown
     })
-    .catch(() => {
-      res.status(SERVERSIDE_ERROR).send({ Message: 'internal error' });
-    });
+    .catch(next);
 };
 
-const createCard = (req, res) => {
+const createCard = (req, res, next) => {
   const { name, link } = req.body;
   Card.create({ name, link, owner: req.user._id })
-    .then((card) => res.send({ data: card }))
-    .catch((error) => {
-      if (error.name === 'ValidationError') {
-        res
-          .status(HTTP_CLIENT_BAD_REQUEST)
-          .send({ message: 'please submit a name and a valid URL' });
-      } else {
-        res.status(SERVERSIDE_ERROR).send({ Message: 'internal error' });
+    .then((card) => res.send(card))
+    .catch(next);
+};
+
+const deleteCard = (req, res, next) => {
+  Card.findById({ _id: req.params.cardId })
+    .orFail(() => new NotFoundError('That card doesn\'t exist'))
+    .then((card) => {
+      if (req.user._id === card.owner._id.toString()) {
+        Card.findByIdAndRemove({ _id: req.params.cardId })
+          .orFail()
+          .then((cardData) => res.send({ data: cardData }))
+          .catch(next);
       }
+    })
+    .catch(() => {
+      next(new BadRequest('You cant delete that'));
     });
 };
 
-const deleteCard = (req, res) => {
-  Card.findByIdAndRemove({ _id: req.params.cardId })
-    .orFail()
-    .then((cardData) => res.send({ data: cardData }))
-    .catch((error) => {
-      if (error.name === 'DocumentNotFoundError') {
-        res
-          .status(HTTP_CLIENT_ERROR_NOT_FOUND)
-          .send({ message: 'no card with that id found' });
-      } else if (error.name === 'CastError') {
-        res
-          .status(HTTP_CLIENT_BAD_REQUEST)
-          .send({ message: 'invalid data request' });
-      } else {
-        res.status(SERVERSIDE_ERROR).send({ Message: 'internal error' });
-      }
-    });
-};
-
-const likeCard = (req, res) => {
+const likeCard = (req, res, next) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
     { $addToSet: { likes: req.user._id } },
     { new: true },
   )
     .orFail()
-    .then((cardData) => res.send({ data: cardData }))
-    .catch((error) => {
-      if (error.name === 'DocumentNotFoundError') {
-        res
-          .status(HTTP_CLIENT_ERROR_NOT_FOUND)
-          .send({ message: 'no card with that id found' });
-      } else if (error.name === 'CastError') {
-        res
-          .status(HTTP_CLIENT_BAD_REQUEST)
-          .send({ message: 'invalid data request' });
-      } else {
-        res.status(SERVERSIDE_ERROR).send({ Message: 'internal error' });
-      }
-    });
+    .then((cardData) => res.send(cardData))
+    .catch(next);
 };
 
-const dislikeCard = (req, res) => {
+const dislikeCard = (req, res, next) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
     { $pull: { likes: req.user._id } }, // remove _id from the array
     { new: true },
   )
     .orFail()
-    .then((cardData) => res.send({ data: cardData }))
-    .catch((error) => {
-      if (error.name === 'DocumentNotFoundError') {
-        res
-          .status(HTTP_CLIENT_ERROR_NOT_FOUND)
-          .send({ message: 'no card with that id found' });
-      } else if (error.name === 'CastError') {
-        res
-          .status(HTTP_CLIENT_BAD_REQUEST)
-          .send({ message: 'invalid data request' });
-      } else {
-        res.status(SERVERSIDE_ERROR).send({ Message: 'internal error' });
-      }
-    });
+    .then((cardData) => res.send(cardData))
+    .catch(next);
 };
 
 module.exports = {

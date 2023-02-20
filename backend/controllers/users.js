@@ -1,5 +1,6 @@
 const User = require('../models/user');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 const {
   HTTP_CLIENT_ERROR_NOT_FOUND,
   HTTP_CLIENT_BAD_REQUEST,
@@ -11,12 +12,14 @@ const {
 const { NODE_ENV, JWT_SECRET } = process.env;
 
 const getCurrentUser = (req, res, next) => {
+  if (!req.user) {
+    return res.status(HTTP_CLIENT_UNAUTHORISED).send({ message: 'User not authorized' });
+  }
+  console.log(req.user)
   User.findById(req.user._id)
     .then((user) => {
       if (!user) {
-        res
-          .status(HTTP_CLIENT_BAD_REQUEST)
-          .send({ message: 'No User with that ID found' });
+        throw new NotFoundError('No User with that ID found');
       }
       return res.status(200).send(user);
     })
@@ -51,56 +54,55 @@ const getUserById = (req, res) => {
     });
 };
 
-const createUser = (req, res) => {
-  const { name, about, avatar,email, password } = req.body;
+const createUser = (req, res, next) => {
+  const { name, about, avatar, email, password } = req.body;
   User.findOne({ email })
     .then((user) => {
       if (user) {
-        res
-        .status(HTTP_CLIENT_CONFLICT)
-        .send({ message: 'Try another email' });
+        return res
+          .status(HTTP_CLIENT_CONFLICT)
+          .send({ message: 'Email already exists' });
       }
-    });
-  if (!email || !password) {
-    res
-    .status(HTTP_CLIENT_BAD_REQUEST)
-    .send({ message: 'Missing email or password' });
-  }
-  
-  return bcrypt.hash(password, 10, (err, hash) => {
-    User.create({
-      name,
-      about,
-      avatar,
-      email,
-      password: hash,
+      if (!email || !password) {
+        return res
+          .status(HTTP_CLIENT_BAD_REQUEST)
+          .send({ message: 'Missing email or password' });
+      }
+      bcrypt.hash(password, 10, (err, hash) => {
+        if (err) {
+          return next(err);
+        }
+        User.create({
+          name,
+          about,
+          avatar,
+          email,
+          password: hash,
+        })
+          .then((user) =>
+            res.send({
+              data: {
+                name: user.name,
+                about: user.about,
+                avatar: user.avatar,
+                email: user.email,
+                _id: user._id,
+              },
+            })
+          )
+          .catch((err) => {
+            if (err.name === 'ValidationError') {
+              return res
+                .status(HTTP_CLIENT_BAD_REQUEST)
+                .send({ message: 'Invalid user data' });
+            }
+            return next(err);
+          });
+      });
     })
-      .then((user) => {
-        res.send({
-          data: {
-            name: user.name,
-            about: user.about,
-            avatar: user.avatar,
-            email: user.email,
-            _id: user._id,
-          },
-        });
-      })
-      .catch(next);
-  });
-  
-  // User.create({ name, about, avatar })
-  //   .then((user) => res.send({ data: user }))
-  //   .catch((error) => {
-  //     if (error.name === 'ValidationError') {
-  //       res
-  //         .status(HTTP_CLIENT_BAD_REQUEST)
-  //         .send({ message: 'invalid user data' });
-  //     } else {
-  //       res.status(SERVERSIDE_ERROR).send({ Message: 'internal error' });
-  //     }
-  //   });
+    .catch(next);
 };
+
 
 const updateProfile = (req, res) => {
   const { name, about } = req.body;
@@ -114,19 +116,19 @@ const updateProfile = (req, res) => {
     .then((user) => res.send({ data: user }))
     .catch((error) => {
       if (error.name === 'ValidationError') {
-        res
+        return res
           .status(HTTP_CLIENT_BAD_REQUEST)
-          .send({ message: 'invalid user data' });
+          .send({ message: 'Invalid user data' });
       } else if (error.name === 'CastError') {
-        res
+        return res
           .status(HTTP_CLIENT_BAD_REQUEST)
-          .send({ message: 'invalid user id' });
+          .send({ message: 'Invalid user id' });
       } else if (error.name === 'DocumentNotFoundError') {
-        res
+        return res
           .status(HTTP_CLIENT_ERROR_NOT_FOUND)
-          .send({ message: `no user found with id ${req.params.id}` });
+          .send({ message: `No user found with id ${req.params.id}` });
       } else {
-        res.status(SERVERSIDE_ERROR).send({ Message: 'internal error' });
+        return next(error);
       }
     });
 };
@@ -169,13 +171,14 @@ const login = (req, res, next) => {
       } else {
         const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret-key', { expiresIn: '7d' });
         res.send({ token });
+        console.log('token',token)
       }
     })
     .catch(() => {
       next(
         res
           .status(HTTP_CLIENT_UNAUTHORISED)
-          .send({ message: 'That email or password shall not pass' }));
+          .send({ message: 'You shall not psss' }));
     });
 };
 
