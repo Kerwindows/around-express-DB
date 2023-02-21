@@ -107,6 +107,7 @@ function Landingpage() {
     api
       .updateProfilePic(data)
       .then((res) => {
+        console.log(res)
         setCurrentUser(res);
         closeAllPopups();
       })

@@ -150,11 +150,10 @@ const updateAvatar = (req, res) => {
   })
     .orFail()
     .then((user) => {
+      res.send(user);
       console.log(user)
-      res.send({ data: user })}
-      )
+    })
 
-    
     .catch((error) => {
       if (error.name === "ValidationError") {
         res
