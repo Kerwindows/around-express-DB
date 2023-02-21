@@ -122,7 +122,7 @@ const updateProfile = (req, res) => {
     { new: true, runValidators: true }
   )
     .orFail()
-    .then((user) => res.send({ data: user }))
+    .then((user) => res.send(user))
     .catch((error) => {
       if (error.name === "ValidationError") {
         return res
@@ -149,7 +149,12 @@ const updateAvatar = (req, res) => {
     runValidators: true,
   })
     .orFail()
-    .then((user) => res.send({ data: user }))
+    .then((user) => {
+      console.log(user)
+      res.send({ data: user })}
+      )
+
+    
     .catch((error) => {
       if (error.name === "ValidationError") {
         res

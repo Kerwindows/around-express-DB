@@ -24,7 +24,10 @@ class Api {
 
   getUser() {
         return this._request(`${this._baseUrl}/users/me`, {
-          headers: this._headers,
+         headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+        'Content-Type': 'application/json',
+      },
     });
    
   }
@@ -32,7 +35,10 @@ class Api {
   setUserInfo({ name, description }) {
     return this._request(`${this._baseUrl}/users/me`, {
       method: "PATCH",
-      headers: this._headers,
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+        'Content-Type': 'application/json',
+      },
       body: JSON.stringify({
         name: name,
         about: description,
@@ -68,10 +74,13 @@ class Api {
       },
     });
   }
-  updateProfilePic({ avatar }) {
+  updateProfilePic(avatar) {
     return this._request(`${this._baseUrl}/users/me/avatar`, {
       method: "PATCH",
-      headers: this._headers,
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+        'Content-Type': 'application/json',
+      },
       body: JSON.stringify({
         avatar,
       }),
@@ -88,13 +97,13 @@ class Api {
 // });
 
 
-export const api = new Api({
+const api = new Api({
   baseUrl:
     process.env.NODE_ENV === 'production'
       ? 'https://api.devaround.students.nomoreparties.sbs'
       : 'http://localhost:3000',
       headers: {
-        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2M2YzM2IxY2Q4N2M1NTU5ZGM1NTY3MGMiLCJpYXQiOjE2NzY5ODU3MDgsImV4cCI6MTY3NzU5MDUwOH0.JK9AeuC9FG8D4nrjnyY1rMmU21XlsMsM4tDSOyIZaaU`,
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
         'Content-Type': 'application/json',
       },
 });

@@ -66,7 +66,7 @@ function Landingpage() {
     setCardToDelete(card);
   }
 
-  function handleCardLike(card) {
+  function toggleLike(card) {
     // Check one more time if this card was already liked
     const isLiked = card.likes.some((user) => user._id === currentUser._id);
 
@@ -181,7 +181,7 @@ function Landingpage() {
       <div className='page'>
         <Main
           cards={cards}
-          onCardLike={handleCardLike}
+          onCardLike={toggleLike}
           onEditProfileClick={handleEditProfileClick}
           onAddPlaceClick={handleAddPlaceClick}
           onEditAvatarClick={handleEditAvatarClick}
