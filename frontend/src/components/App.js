@@ -36,18 +36,19 @@ function App() {
     setLoggedIn(false);
   }
   useEffect(() => {
-    if (localStorage.getItem("token")) {
+    if (localStorage.getItem("token")) {     
       const token = localStorage.getItem("token");
+      console.log(token)
       auth
         .checkToken(token)
         .then((res) => {
           if (res) {
             setLoggedIn(true);
-            setUserEmail(res.data.email);
+            setUserEmail(res.email);
             history.push("/");
           }
         })
-        .catch((err) => console.log(`{'Something went wrong'}`));
+        .catch((err) => console.log(err));
     }
   }, []);
 
@@ -99,7 +100,7 @@ function App() {
         <Route path='/signup'>
           <Register registerRequest={registerRequest} />
         </Route>
-        <ProtectedRoute path='/' loggedIn={loggedIn} component={Landingpage} />
+        <ProtectedRoute path='/' loggedIn={loggedIn} component={Landingpage}  />
         <Route exact path='/'>
           {loggedIn ? <Redirect to='/' /> : <Redirect to='/signin' />}
         </Route>

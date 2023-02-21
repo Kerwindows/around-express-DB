@@ -75,8 +75,9 @@ function Landingpage() {
       .toggleLike(card._id, isLiked)
       .then((newCard) => {
         setCards((state) =>
-          state.map((currentCard) =>
-            currentCard._id === card._id ? newCard : currentCard
+          state.map((currentCard) => {           
+             return currentCard._id === card._id ? newCard : currentCard           
+          }
           )
         );
       })

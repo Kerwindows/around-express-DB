@@ -23,9 +23,10 @@ class Api {
   }
 
   getUser() {
-    return this._request(`${this._baseUrl}/users/me`, {
-      headers: this._headers,
+        return this._request(`${this._baseUrl}/users/me`, {
+          headers: this._headers,
     });
+   
   }
 
   setUserInfo({ name, description }) {
@@ -58,9 +59,13 @@ class Api {
   }
 
   toggleLike(id, isLiked) {
-    return this._request(`${this._baseUrl}/cards/likes/${id}`, {
+    console.log('liked clicked')
+    return this._request(`${this._baseUrl}/cards/${id}/likes`, {
       method: isLiked ? "DELETE" : "PUT",
-      headers: this._headers,
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+        'Content-Type': 'application/json',
+      },
     });
   }
   updateProfilePic({ avatar }) {
@@ -83,12 +88,15 @@ class Api {
 // });
 
 
-const api = new Api({
-  baseUrl: "http://localhost:3000",
-  headers: {
-    authorization: "388e1377-9ab5-4db7-9c4c-d98eb5bc0391",
-    "Content-Type": "application/json",
-  },
+export const api = new Api({
+  baseUrl:
+    process.env.NODE_ENV === 'production'
+      ? 'https://api.devaround.students.nomoreparties.sbs'
+      : 'http://localhost:3000',
+      headers: {
+        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2M2YzM2IxY2Q4N2M1NTU5ZGM1NTY3MGMiLCJpYXQiOjE2NzY5ODU3MDgsImV4cCI6MTY3NzU5MDUwOH0.JK9AeuC9FG8D4nrjnyY1rMmU21XlsMsM4tDSOyIZaaU`,
+        'Content-Type': 'application/json',
+      },
 });
 
 export default api;
