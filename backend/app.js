@@ -65,7 +65,8 @@ app.use(errors());
 app.use((err, req, res, next) => {
   console.error(err);
   const { status = SERVERSIDE_ERROR, message } = err;
-  res.status(status).send({ message });
+  //res.status(status).send({ message });
+  res.send({ message });
 });
 
 const { PORT = 3000 } = process.env;

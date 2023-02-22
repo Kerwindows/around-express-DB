@@ -144,16 +144,16 @@ const updateProfile = (req, res) => {
 
 const updateAvatar = (req, res) => {
   const { avatar } = req.body;
-  User.findOneAndUpdate(req.user._id, avatar, {
-    new: true,
-    runValidators: true,
-  })
+  User.findOneAndUpdate(
+    req.user._id,
+    { avatar },
+    {
+      new: true,
+      runValidators: true,
+    }
+  )
     .orFail()
-    .then((user) => {
-      res.send(user);
-      console.log(user)
-    })
-
+    .then((user) => res.send(user))
     .catch((error) => {
       if (error.name === "ValidationError") {
         res

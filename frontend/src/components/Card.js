@@ -1,6 +1,6 @@
 /* --------------------------------- imports -------------------------------- */
 import React, { useContext } from "react";
-import trash from "../images/Trash.svg";
+import trash from "../images/Trash.png";
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
 
 /* ------------------------ function EditProfilePopup ----------------------- */
@@ -14,15 +14,16 @@ function Card({
   const currentUser = useContext(CurrentUserContext);
 
   // Checking if the current user is the owner of the current card
-  const isOwn = card.owner._id === currentUser._id;
-
+  const isOwn = card.owner === currentUser._id;
   // Creating a variable for the delete button
   const cardDeleteButtonClassName = `card__trash ${
     isOwn ? "card__trash_visible" : "card__trash_hidden"
   }`;
-
   // Check if the card was liked by the current user
-  const isLiked = card.likes.some((user) => user._id === currentUser._id);
+  const isLiked = card.likes.some((curretnUserId) => {
+    return curretnUserId === currentUser._id
+  });
+
 
   // Creating a variable for the like button
   const cardLikeButtonClassName = `card__place-favorite ${
@@ -57,7 +58,7 @@ function Card({
         aria-label='Delete card'
       >
         <img
-          className='card__trash-image'
+          className='card__trash'
           src={trash}
           alt={`Delete ${card.name}`}
         />

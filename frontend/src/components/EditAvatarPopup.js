@@ -9,7 +9,7 @@ function EditAvatarPopup({ onUpdateAvatar, isLoading, isOpen, onClose }) {
   const avatarRef = useRef(null);
 
   function handleSubmitPost(validatedData, e) {
-    onUpdateAvatar(validatedData);
+    onUpdateAvatar(validatedData.avatar);
   }
 
   useEffect(() => {

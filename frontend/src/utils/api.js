@@ -18,7 +18,10 @@ class Api {
 
   getInitialCards() {
     return this._request(`${this._baseUrl}/cards`, {
-      headers: this._headers,
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+        'Content-Type': 'application/json',
+      },
     });
   }
 
@@ -49,7 +52,10 @@ class Api {
   addCard({ name, link }) {
     return this._request(`${this._baseUrl}/cards`, {
       method: "POST",
-      headers: this._headers,
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+        'Content-Type': 'application/json',
+      },
       body: JSON.stringify({
         name: name,
         link: link,
@@ -60,7 +66,10 @@ class Api {
   deleteCard(cardId) {
     return this._request(`${this._baseUrl}/cards/${cardId}`, {
       method: "DELETE",
-      headers: this._headers,
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+        'Content-Type': 'application/json',
+      },
     });
   }
 
@@ -81,7 +90,7 @@ class Api {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        avatar,
+        avatar
       }),
     });
   }
@@ -101,10 +110,7 @@ const api = new Api({
     process.env.NODE_ENV === 'production'
       ? 'https://api.devaround.students.nomoreparties.sbs'
       : 'http://localhost:3000',
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
-        'Content-Type': 'application/json',
-      },
+      
 });
 
 export default api;

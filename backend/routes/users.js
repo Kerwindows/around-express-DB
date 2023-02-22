@@ -1,13 +1,12 @@
 const express = require("express");
 const { celebrate, Joi } = require("celebrate");
-// const validator = require('validator');
-// const validateURL = (string, helpers) => {
-//   if (validator.isURL(string)) {
-//     return string;
-//   }
-//   return helpers.error('string.uri');
-// };
-
+const validator = require('validator');
+const validateURL = (string, helpers) => {
+  if (validator.isURL(string)) {
+    return string;
+  }
+  return helpers.error('string.uri');
+};
 
 const router = express.Router();
 const {
@@ -50,13 +49,8 @@ router.patch(
   "/me/avatar",
   celebrate({
     body: Joi.object().keys({
-      avatar: Joi.string()
-        .pattern(
-          new RegExp(
-            "^((https?|ftp|smtp)://)?(www.)?[a-z0-9]+.[a-z]+(/[a-zA-Z0-9#]+/?)*$"
-          )
-        )
-        .required(),
+      // TO RECHECK CUSTOM VALIDATION
+      avatar: Joi.string().required().custom(validateURL),
     }),
   }),
   updateAvatar

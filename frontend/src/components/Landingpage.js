@@ -49,7 +49,7 @@ function Landingpage() {
     setDeleteConfirmationPopupOpen(false);
     setSelectedCard(null);
   }
-
+  
   useEffect(() => {
     const closeByEscape = (e) => {
       if (e.key === "Escape") {
@@ -68,7 +68,12 @@ function Landingpage() {
 
   function toggleLike(card) {
     // Check one more time if this card was already liked
-    const isLiked = card.likes.some((user) => user._id === currentUser._id);
+    const isLiked = card.likes.some((currentUserId) => { 
+      return currentUserId === currentUser._id
+    });
+    
+    
+    
 
     // Send a request to the API and getting the updated card data
     api
@@ -107,7 +112,6 @@ function Landingpage() {
     api
       .updateProfilePic(data)
       .then((res) => {
-        console.log(res)
         setCurrentUser(res);
         closeAllPopups();
       })
@@ -170,7 +174,7 @@ function Landingpage() {
     api
       .getInitialCards()
       .then((initialCards) => {
-        setCards(initialCards);
+        setCards(initialCards.reverse());
       })
       .catch((err) => {
         console.log(err);
