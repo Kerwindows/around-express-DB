@@ -11,14 +11,14 @@ const {
 const { requestLogger, errorLogger } = require("./middleware/logger");
 const auth = require("./middleware/auth");
 const allowedOrigins = [
-  "http://localhost:3001"
+  "http://localhost:3001",
+  "https://kerwindows.students.nomoredomainssbs.ru",
+  "https://www.kerwindows.students.nomoredomainssbs.ru"
 ]
 require('dotenv').config();
 
 const app = express();
 app.use(helmet());
-app.use(cors());
-app.options('*', cors());
 app.use(cors({ origin: allowedOrigins }));
 
 mongoose.connect("mongodb://localhost:27017/aroundb");
@@ -65,7 +65,7 @@ app.use(errors());
 app.use((err, req, res, next) => {
   console.error(err);
   const { status = SERVERSIDE_ERROR, message } = err;
-  //res.status(status).send({ message });
+  res.status(status).send({ message });
   res.send({ message });
 });
 

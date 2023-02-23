@@ -145,7 +145,7 @@ const updateProfile = (req, res) => {
 const updateAvatar = (req, res) => {
   const { avatar } = req.body;
   User.findOneAndUpdate(
-    req.user._id,
+    {_id: req.user._id},
     { avatar },
     {
       new: true,
