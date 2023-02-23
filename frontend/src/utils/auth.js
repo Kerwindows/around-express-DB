@@ -1,9 +1,6 @@
-// export const BASE_URL = "https://register.nomoreparties.co";
-// export const BASE_URL = "http://localhost:3000";
-
 const BASE_URL =
   process.env.NODE_ENV === 'production'
-    ? 'https://api.devaround.students.nomoreparties.sbs'
+    ? 'https://api.kerwindows.students.nomoredomainssbs.ru'
     : 'http://localhost:3000';
 
 

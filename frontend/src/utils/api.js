@@ -96,19 +96,10 @@ class Api {
   }
 }
 
-// const api = new Api({
-//   baseUrl: "https://around.nomoreparties.co/v1/group-12",
-//   headers: {
-//     authorization: "388e1377-9ab5-4db7-9c4c-d98eb5bc0391",
-//     "Content-Type": "application/json",
-//   },
-// });
-
-
 const api = new Api({
   baseUrl:
     process.env.NODE_ENV === 'production'
-      ? 'https://api.devaround.students.nomoreparties.sbs'
+      ? 'https://api.kerwindows.students.nomoredomainssbs.ru'
       : 'http://localhost:3000',
       
 });
