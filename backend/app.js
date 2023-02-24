@@ -9,7 +9,7 @@ const SERVERSIDE_ERROR = require('./utils/utils');
 const { requestLogger, errorLogger } = require('./middleware/logger');
 const auth = require('./middleware/auth');
 const NotFoundError = require('./middleware/errors/not-found');
-const errorHandler  = require('./middleware/errors/error-handler');
+const {errorHandler}  = require('./middleware/errors/error-handler');
 
 const allowedOrigins = ['http://localhost:3001', 'https://kerwindows.students.nomoredomainssbs.ru', 'https://www.kerwindows.students.nomoredomainssbs.ru'];
 
