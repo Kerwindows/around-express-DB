@@ -9,6 +9,7 @@ const SERVERSIDE_ERROR = require('./utils/utils');
 const { requestLogger, errorLogger } = require('./middleware/logger');
 const auth = require('./middleware/auth');
 const NotFoundError = require('./middleware/errors/not-found');
+const errorHandler  = require('./middleware/errors/error-handler');
 
 const allowedOrigins = ['http://localhost:3001', 'https://kerwindows.students.nomoredomainssbs.ru', 'https://www.kerwindows.students.nomoredomainssbs.ru'];
 
@@ -48,7 +49,6 @@ const cardRouter = require('./routes/cards');
 app.use('/users', usersRouter);
 app.use('/cards', cardRouter);
 
-
 app.use((req, res, next) => {
   next(new NotFoundError('Not found'));
 });
@@ -56,11 +56,7 @@ app.use((req, res, next) => {
 app.use(errorLogger);
 app.use(errors());
 
-app.use((err, req, res, next) => {
-  console.error(err);
-  const { status = SERVERSIDE_ERROR, message } = err;
-  res.status(status).send({ message });
-});
+app.use(errorHandler);
 
 const { PORT = 3000 } = process.env;
 app.listen(PORT, () => {
