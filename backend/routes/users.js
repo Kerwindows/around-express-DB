@@ -1,12 +1,5 @@
-const express = require("express");
-const { celebrate, Joi } = require("celebrate");
-const validator = require('validator');
-const validateURL = (string, helpers) => {
-  if (validator.isURL(string)) {
-    return string;
-  }
-  return helpers.error('string.uri');
-};
+const express = require('express');
+const { celebrate, Joi } = require('celebrate');
 
 const router = express.Router();
 const {
@@ -15,45 +8,56 @@ const {
   updateProfile,
   getCurrentUser,
   updateAvatar,
-} = require("../controllers/users");
+} = require('../controllers/users');
 
-router.get("/", getUsers);
+const customUrlValidator = (value, helpers) => {
+  const pattern = new RegExp('^(https?:\\/\\/)?'
+    + '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'
+    + '((\\d{1,3}\\.){3}\\d{1,3}))'
+    + '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'
+    + '(\\?[;&amp;a-z\\d%_.~+=-]*)?'
+    + '(\\#[-a-z\\d_]*)?$', 'i');
 
-router.get('/me',getCurrentUser);
+  if (pattern.test(value)) {
+    return value;
+  }
+
+  return helpers.message('Invalid URL');
+};
+
+router.get('/', getUsers);
+
+router.get('/me', getCurrentUser);
 
 router.get(
-  "/:id",
+  '/:id',
   celebrate({
-    body: Joi.object().keys({
-      _id: Joi.string().hex().length(24),
+    params: Joi.object().keys({
+      id: Joi.string().hex().length(24),
     }),
   }),
-  getUserById
+  getUserById,
 );
 
-
-//router.patch('/me', updateProfile);
 router.patch(
-  "/me",
+  '/me',
   celebrate({
     body: Joi.object().keys({
       name: Joi.string().required().min(2).max(30),
       about: Joi.string().required().min(2).max(30),
     }),
   }),
-  updateProfile
+  updateProfile,
 );
 
-//router.patch('/me/avatar', updateAvatar);
 router.patch(
-  "/me/avatar",
+  '/me/avatar',
   celebrate({
     body: Joi.object().keys({
-      // TO RECHECK CUSTOM VALIDATION
-      avatar: Joi.string().required().custom(validateURL),
+      avatar: Joi.string().required().custom(customUrlValidator),
     }),
   }),
-  updateAvatar
+  updateAvatar,
 );
 
 module.exports = router;
