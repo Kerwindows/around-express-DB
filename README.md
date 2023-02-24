@@ -46,3 +46,7 @@ This project is the enhanced version of project 4 [Around the US](https://github
 
 - [View Cloud Deployment (My Private Api With Authentication)](https://kerwindows.students.nomoredomainssbs.ru/)
 
+- Domain: https://kerwindows.students.nomoredomainssbs.ru
+
+- Public IP: 35.247.58.157
+

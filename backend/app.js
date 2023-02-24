@@ -48,7 +48,7 @@ const cardRouter = require('./routes/cards');
 app.use('/users', usersRouter);
 app.use('/cards', cardRouter);
 
-// Handle 404 errors
+
 app.use((req, res, next) => {
   next(new NotFoundError('Not found'));
 });
