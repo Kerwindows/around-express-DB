@@ -1,6 +1,9 @@
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
-const User = require('../models/user');
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
+const User = require("../models/user");
+const { NotFoundError } = require("../middleware/errors/bad-request");
+const { Conflict } = require("../middleware/errors/conflict");
+const { BadRequestError } = require("../middleware/errors/bad-request");
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 
@@ -8,7 +11,7 @@ const getCurrentUser = (req, res, next) => {
   User.findById(req.user._id)
     .then((user) => {
       if (!user) {
-        throw new NotFoundError('No User with that ID found');
+        throw new NotFoundError("No User with that ID found");
       }
       return res.status(200).send(user);
     })
@@ -23,7 +26,7 @@ const getUsers = (req, res) => {
 
 const getUserById = (req, res) => {
   User.findById(req.params.id)
-    .orFail()
+    .orFail(() => new NotFoundError("That card doesn't exist"))
     .then((user) => {
       res.send({ data: user });
     })
@@ -33,11 +36,12 @@ const getUserById = (req, res) => {
 };
 
 const createUser = (req, res, next) => {
-  const {
-    name, about, avatar, email, password,
-  } = req.body;
+  const { name, about, avatar, email, password } = req.body;
   User.findOne({ email })
     .then((user) => {
+      if (user) {
+        return next(new Conflict("User with that email doesn't exist"));
+      }
       bcrypt.hash(password, 10, (err, hash) => {
         if (err) {
           return next(err);
@@ -49,23 +53,25 @@ const createUser = (req, res, next) => {
           email,
           password: hash,
         })
-          .then((user) => res.send({
-            data: {
-              name: user.name,
-              about: user.about,
-              avatar: user.avatar,
-              email: user.email,
-              _id: user._id,
-            },
-          }))
+          .then((user) =>
+            res.send({
+              data: {
+                name: user.name,
+                about: user.about,
+                avatar: user.avatar,
+                email: user.email,
+                _id: user._id,
+              },
+            })
+          )
           .catch((err) => {
-            if (err.name === 'ValidationError') {
+            if (err.name === "ValidationError") {
               next(
                 new BadRequestError(
                   `${Object.values(err.errors)
                     .map((error) => error.message)
-                    .join(', ')}`,
-                ),
+                    .join(", ")}`
+                )
               );
             } else {
               next(err);
@@ -82,12 +88,16 @@ const updateProfile = (req, res) => {
   User.findByIdAndUpdate(
     req.user._id,
     { name, about },
-    { new: true, runValidators: true },
+    { new: true, runValidators: true }
   )
-    .orFail()
+    .orFail(() => new NotFoundError("That card doesn't exist"))
     .then((user) => res.send(user))
-    .catch(() => {
-      next(error);
+    .catch((err) => {
+      if (err.name === "ValidationError") {
+        next(new BadRequestError("Invalida data"));
+      } else {
+        next(err);
+      }
     });
 };
 
@@ -99,12 +109,16 @@ const updateAvatar = (req, res) => {
     {
       new: true,
       runValidators: true,
-    },
+    }
   )
-    .orFail(() => new NotFoundError('That card doesn\'t exist'))
+    .orFail(() => new NotFoundError("That card doesn't exist"))
     .then((user) => res.send(user))
-    .catch(() => {
-      next(error);
+    .catch((err) => {
+      if (err.name === "ValidationError") {
+        next(new BadRequestError("Invalida data"));
+      } else {
+        next(err);
+      }
     });
 };
 
@@ -114,13 +128,13 @@ const login = (req, res, next) => {
     .then((user) => {
       const token = jwt.sign(
         { _id: user._id },
-        NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret-key',
-        { expiresIn: '7d' },
+        NODE_ENV === "production" ? JWT_SECRET : "dev-secret-key",
+        { expiresIn: "7d" }
       );
       res.send({ token });
     })
-    .catch(() => {
-      next(error);
+    .catch((err) => {
+      next(new Unauthorised(err.message));
     });
 };
 

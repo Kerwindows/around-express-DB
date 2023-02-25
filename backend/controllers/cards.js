@@ -1,9 +1,6 @@
 const { NotFoundError } = require('../middleware/errors/not-found');
 const { ForbiddenError } = require('../middleware/errors/forbidden');
-const {
-  HTTP_CLIENT_BAD_REQUEST,
-  SERVERSIDE_ERROR,
-} = require('../utils/utils');
+const { BadRequestError } = require('../middleware/errors/bad-request');
 const Card = require('../models/card');
 
 const getCards = (req, res, next) => {
@@ -18,14 +15,12 @@ const createCard = (req, res, next) => {
   const { name, link } = req.body;
   Card.create({ name, link, owner: req.user._id })
     .then((card) => res.send(card))
-    .catch((error) => {
-      if (error.name === 'ValidationError') {
-        res
-          .status(HTTP_CLIENT_BAD_REQUEST)
-          .send({ message: 'Please submit a name and a valid URL' });
-      } else {
-        res.status(SERVERSIDE_ERROR).send({ Message: 'Internal error' });
-      }
+    .catch((err) => {
+      if (err.name === 'ValidationError') { 
+        next(new BadRequestError('Invalida data')); 
+      } else { 
+        next(err); 
+      } 
     });
 };
 
@@ -42,8 +37,8 @@ const deleteCard = (req, res, next) => {
         next(new ForbiddenError("You don't have permission to delete this card"));
       }
     })
-    .catch(() => {
-      next(error);
+    .catch((err) => {
+      next(err);
     });
 };
 
